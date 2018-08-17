@@ -279,6 +279,35 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
             $setup->getConnection()->createTable($table);
         }
+        if (version_compare($version, '2.3.7') < 0) {
+            /* Add meta title field to posts tabel */
+            $connection->addColumn(
+                $setup->getTable('magefan_blog_post'),
+                'email',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length' => 255,
+                    'nullable' => true,
+                    'comment' => 'Email',
+                    'after' => 'title'
+                ],
+                'contact',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                    'nullable' => true,
+                    'comment' => 'Contact',
+                    'after' => 'email'
+                ],
+                'company',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length' => 255,
+                    'nullable' => true,
+                    'comment' => 'Organization',
+                    'after' => 'email'
+                ]
+            );
+        }
 
         $setup->endSetup();
     }
